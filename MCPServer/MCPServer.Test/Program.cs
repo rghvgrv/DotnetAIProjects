@@ -12,11 +12,31 @@ var transport = new SseClientTransport(new()
 
 var clientMCP = await McpClientFactory.CreateAsync(transport);
 
-var tools = await clientMCP.ListToolsAsync(); // For Listing all the tools
+// 🔹 List all available tools
+var tools = await clientMCP.ListToolsAsync();
+foreach (var tool in tools)
+{
+    Console.WriteLine($"Tool: {tool.Name} - {tool.Description}");
+}
 
-var results = await clientMCP.CallToolAsync(
-    "echo",
+// 🔹 Call Echo tool
+var echoResult = await clientMCP.CallToolAsync(
+    "echo", // method name
     new Dictionary<string, object?> { { "msg", "World" } }
-    );
+);
 
-Console.WriteLine("Results : " + ((TextContentBlock)results.Content[0]).Text);
+Console.WriteLine("Echo Result : " + ((TextContentBlock)echoResult.Content[0]).Text);
+
+// 🔹 Call AddNumbers tool
+var addResult = await clientMCP.CallToolAsync(
+    "add_numbers", // method name in your class
+    new Dictionary<string, object?>
+    {
+        { "a", 5 },
+        { "b", 7 }
+    }
+);
+
+Console.WriteLine("AddNumbers Result : " + ((TextContentBlock)addResult.Content[0]).Text);
+
+Console.WriteLine("--------------------------");

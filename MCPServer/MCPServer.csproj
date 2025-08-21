@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MCPServer.Test\**" />
+    <Content Remove="MCPServer.Test\**" />
+    <EmbeddedResource Remove="MCPServer.Test\**" />
+    <None Remove="MCPServer.Test\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.8" />
     <PackageReference Include="ModelContextProtocol" Version="0.3.0-preview.3" />
