@@ -20,5 +20,11 @@ namespace MCPServer.WebApi.Controllers
         {
             return _mcpServerWrapper.ListTools();
         }
+
+        [HttpGet("prompt")]
+        public async Task<string> PromptRequest(string userMessage)
+        {
+            return await _mcpServerWrapper.GetResponseForPrompt(userMessage);
+        }
     }
 }
