@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Npgsql;
+using System.Text;
 using System.Text.Json;
 
 namespace PromptExample.Services
@@ -9,6 +10,7 @@ namespace PromptExample.Services
         private readonly IConfiguration _configuration;
         private readonly string APIKEY = "";
         private readonly string APIURL = "";
+        private readonly string SUPABASE_CONN = "";
 
         public OpenAIService(IConfiguration configuration)
         {
@@ -16,6 +18,7 @@ namespace PromptExample.Services
             _configuration = configuration;
             APIKEY = _configuration.GetRequiredSection("OPENAI:ApiKey").Value!;
             APIURL = _configuration.GetRequiredSection("OPENAI:ApiUrl").Value!;
+            SUPABASE_CONN = _configuration.GetConnectionString("DefaultConnection")!;
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {APIKEY}");
         }
 
@@ -101,6 +104,14 @@ namespace PromptExample.Services
                           .GetString()
                           ?.Trim() ?? "";
 
+        }
+
+        public string ConnectWithSupaBase()
+        {
+            Console.WriteLine(SUPABASE_CONN);
+            using var conn = new NpgsqlConnection(SUPABASE_CONN);
+            conn.Open();
+            return "Able to Connect to the DB";
         }
     }
 }

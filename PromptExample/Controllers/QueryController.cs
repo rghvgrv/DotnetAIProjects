@@ -66,5 +66,11 @@ namespace AiQueryApi.Controllers
                 return BadRequest(new { message = "Error executing SQL", error = ex.Message, query = sqlQuery });
             }
         }
+        [HttpGet("PGSqlConn")]
+        public IActionResult ConnectWithSupaBase()
+        {
+            string status = _openAIService.ConnectWithSupaBase();
+            return Ok(status);
+        }
     }
 }
