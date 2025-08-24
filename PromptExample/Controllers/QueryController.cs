@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using PromptExample.Data;
 using PromptExample.Services;
 
@@ -66,11 +67,37 @@ namespace AiQueryApi.Controllers
                 return BadRequest(new { message = "Error executing SQL", error = ex.Message, query = sqlQuery });
             }
         }
-        [HttpGet("PGSqlConn")]
-        public IActionResult ConnectWithSupaBase()
+        //[HttpGet("PGSqlConn")]
+        //public async Task<IActionResult> ConnectWithSupaBase()
+        //{
+        //    bool status = await _openAIService.ConnectWithSupaBaseAsync();
+        //    return Ok(status);
+        //}
+        [HttpPost("GenericQuerySupaBase")]
+        public async Task<IActionResult> GenericQueryDataForSupaBase([FromBody] QueryRequest request)
         {
-            string status = _openAIService.ConnectWithSupaBase();
-            return Ok(status);
+            var schemaDescription = @"
+                Table: Students (id, Name, Age, Phone, City_Id)
+                Table: City (id, Name, Rainfall)
+            ";
+
+            var sqlQuery = await _openAIService.GenerateSqlQuery(request.Question, schemaDescription);
+
+            if (string.IsNullOrWhiteSpace(sqlQuery))
+                return BadRequest(new { message = "Couldn't generate SQL query" });
+
+            try
+            {
+                var results = await _openAIService.ConnectWithSupaBaseAsync(sqlQuery);
+                if (results.Count == 0)
+                    return Ok("No Data Found");
+                return Ok(new { query = sqlQuery, data = results });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Error executing SQL", error = ex.Message, query = sqlQuery });
+            }
         }
+
     }
 }

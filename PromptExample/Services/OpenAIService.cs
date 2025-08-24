@@ -55,7 +55,7 @@ namespace PromptExample.Services
         public async Task<string> GenerateSqlQuery(string userprompt, string schemadescription)
         {
             var prompt = $@"
-                    You are a SQL generator for EF Core InMemoryDatabase.
+                    You are a PgSQL query generator for EF Core InMemoryDatabase.
                     Schema:
                     {schemadescription}
 
@@ -106,12 +106,47 @@ namespace PromptExample.Services
 
         }
 
-        public string ConnectWithSupaBase()
+        public async Task<List<Dictionary<string, object>>> ConnectWithSupaBaseAsync(string sqlQuery)
         {
-            Console.WriteLine(SUPABASE_CONN);
-            using var conn = new NpgsqlConnection(SUPABASE_CONN);
-            conn.Open();
-            return "Able to Connect to the DB";
+            try
+            {
+                await using var conn = new NpgsqlConnection(SUPABASE_CONN);
+                await conn.OpenAsync();
+                Console.WriteLine("✅ Connected to Supabase successfully.");
+
+                sqlQuery = CleanSqlQuery(sqlQuery);
+
+                await using var cmd = new NpgsqlCommand(sqlQuery, conn);
+                await using var reader = await cmd.ExecuteReaderAsync();
+
+                var results = new List<Dictionary<string, object>>();
+                while (await reader.ReadAsync())
+                {
+                    var row = new Dictionary<string, object>();
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                    }
+                    results.Add(row);
+                }
+
+                return results;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Failed to connect with Supabase: {ex.Message}");
+                throw; // preserves stack trace
+            }
+        }
+        private string CleanSqlQuery(string sql)
+        {
+            if (string.IsNullOrWhiteSpace(sql)) return string.Empty;
+
+            // Remove ```sql and ``` fences
+            sql = sql.Replace("```sql", "", StringComparison.OrdinalIgnoreCase)
+                     .Replace("```", "");
+
+            return sql.Trim();
         }
     }
 }
