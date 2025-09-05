@@ -1,0 +1,9 @@
+{
+	"servers": {
+		"funky-mcp": {
+			"type": "stdio",
+			"command": "dotnet",
+			"args": ["run", "--project", "D:\\Dotnet_Projects\\MCPServer\\FunkyMCP\\FunkyMCP.csproj"]
+		}
+	}
+}
