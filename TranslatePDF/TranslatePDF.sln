@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslatePDF", "TranslatePDF.csproj", "{E9E03B8A-4856-4E82-A665-B973F39FEE0A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E9E03B8A-4856-4E82-A665-B973F39FEE0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9E03B8A-4856-4E82-A665-B973F39FEE0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9E03B8A-4856-4E82-A665-B973F39FEE0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9E03B8A-4856-4E82-A665-B973F39FEE0A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7376243A-ECEF-4B2E-9688-23B78C57BF98}
+	EndGlobalSection
+EndGlobal
